@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "JetpackSandbox"
+rootProject.name = "Messenger"
 include(":app")
