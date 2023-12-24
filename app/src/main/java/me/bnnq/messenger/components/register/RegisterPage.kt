@@ -17,6 +17,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,20 +37,21 @@ fun RegisterPage(
     navController: NavController,
     viewModel: RegisterViewModel = hiltViewModel())
 {
-    val registerResult by viewModel.registerResult.collectAsState()
-    val registerErrorMessage by viewModel.registerErrorMessage.collectAsState()
+    LaunchedEffect(viewModel) {
+        viewModel.registerResult.collect { result ->
+            result?.let {
+                if (it.success)
+                    navController.navigate("conversations")
+                else
+                    Toast.makeText(context, it.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-    when (registerResult)
+    DisposableEffect(viewModel)
     {
-        true -> navController.navigate("conversations")
-        false ->
-        {
-            Toast.makeText(context, registerErrorMessage, Toast.LENGTH_SHORT).show()
-        }
-
-        null ->
-        {
-        }
+        viewModel.onInit()
+        onDispose { viewModel.onDispose() }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
