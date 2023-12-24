@@ -18,9 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import me.bnnq.messenger.R
+import me.bnnq.messenger.services.ServerCommunicationPool
 
 @Composable
-fun SplashPage(navController : NavController, viewModel: SplashViewModel = hiltViewModel())
+fun SplashPage(navController: NavController, viewModel: SplashViewModel = hiltViewModel())
 {
     val scale = remember { Animatable(0f) }
     LaunchedEffect(key1 = true) {
@@ -32,14 +33,15 @@ fun SplashPage(navController : NavController, viewModel: SplashViewModel = hiltV
             )
         )
 
-        if (viewModel.authenticationService.isAuthenticated())
+        if (ServerCommunicationPool.isCurrentUserAuthenticated())
             navController.navigate("conversations")
         else
             navController.navigate("login")
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Image(painter = painterResource(id = R.drawable.logo),
+        Image(
+            painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
             modifier = Modifier
                 .scale(scale.value)
