@@ -1,49 +1,54 @@
 package me.bnnq.messenger.modules
 
+import androidx.navigation.NavController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.bnnq.messenger.services.StubAuthenticationService
-import me.bnnq.messenger.services.StubChatRepository
-import me.bnnq.messenger.services.StubMessageRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import me.bnnq.messenger.services.ApiAuthenticationService
+import me.bnnq.messenger.services.ApiChatRepository
+import me.bnnq.messenger.services.ApiMessageRepository
 import me.bnnq.messenger.services.abstractions.IAuthenticationService
 import me.bnnq.messenger.services.abstractions.IChatRepository
 import me.bnnq.messenger.services.abstractions.IMessageRepository
+import me.bnnq.messenger.utils.ServiceCoroutineScope
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DependencyContainerModule {
+object DependencyContainerModule
+{
 //    @Provides
 //    fun provideAuthenticationService(@ApplicationContext context : Context) : IAuthenticationService {
 //        return LocalAuthenticationService(context)
 //    }
 
-    private var authenticationService : IAuthenticationService? = null
     @Provides
-    fun provideAuthenticationService() : IAuthenticationService {
-        if (authenticationService == null)
-            authenticationService = StubAuthenticationService()
-
-        return authenticationService!!
+    @Singleton
+    fun provideAuthenticationService(): IAuthenticationService
+    {
+        return ApiAuthenticationService()
     }
 
-    private var chatRepository : IChatRepository? = null
     @Provides
-    fun provideChatRepository() : IChatRepository {
-        if (chatRepository == null)
-            chatRepository = StubChatRepository()
-
-        return chatRepository!!
+    @Singleton
+    fun provideChatRepository(): IChatRepository
+    {
+        return ApiChatRepository()
     }
 
-    private var messageRepository : IMessageRepository? = null
     @Provides
-    fun provideMessageRepository() : IMessageRepository {
-        if (messageRepository == null)
-            messageRepository = StubMessageRepository()
+    @Singleton
+    fun provideMessageRepository(): IMessageRepository
+    {
+        return ApiMessageRepository()
+    }
 
-        return messageRepository!!
+    @Provides
+    fun provideServiceCoroutineScope(dispatcher: CoroutineDispatcher): ServiceCoroutineScope
+    {
+        return ServiceCoroutineScope(dispatcher)
     }
 
 }
