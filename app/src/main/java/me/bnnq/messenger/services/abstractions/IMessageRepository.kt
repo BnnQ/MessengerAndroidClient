@@ -4,6 +4,6 @@ import me.bnnq.messenger.models.Message
 
 interface IMessageRepository
 {
-    fun getChatMessages(chatId: Int): List<Message>;
-    fun sendMessage(chatId: Int, message: Message): Message?;
+    fun getChatMessages(chatId: Int): String?
+    fun sendMessage(chatId: Int, message: Message): String?
 }
