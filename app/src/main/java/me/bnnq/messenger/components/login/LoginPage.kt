@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,14 +40,22 @@ fun LoginPage(
     context: Context,
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel()
-) {
-    val loginResult by viewModel.loginResult.collectAsState()
+)
+{
+    LaunchedEffect(viewModel) {
+        viewModel.loginResult.collect { result ->
+            result?.let {
+                if (it.success)
+                    navController.navigate("conversations")
+                else
+                    Toast.makeText(context, it.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-    loginResult?.let {
-        if (it.success)
-            navController.navigate("conversations")
-        else
-            Toast.makeText(context, it.errorMessage, Toast.LENGTH_SHORT).show()
+    DisposableEffect(viewModel) {
+        viewModel.onInit()
+        onDispose { viewModel.onDispose() }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -84,7 +94,7 @@ fun LoginPage(
                 OutlinedTextField(
                     value = viewModel.getPassword(),
                     onValueChange = { viewModel.setPassword(it) },
-                    label = { Text( "Password") },
+                    label = { Text("Password") },
                     maxLines = 3,
                     isError = viewModel.passwordValidationError != null,
                     supportingText = { Text(viewModel.passwordValidationError ?: "") }
@@ -97,7 +107,9 @@ fun LoginPage(
                 ClickableText(
                     text = AnnotatedString("Don't have an account? Register"),
                     onClick = { navController.navigate("register") },
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color(73, 93, 146), textDecoration = TextDecoration.Underline))
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color(73, 93, 146),
+                        textDecoration = TextDecoration.Underline))
             }
         }
     }
