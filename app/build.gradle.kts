@@ -4,8 +4,12 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    // Google services for firebasae
+    id("com.google.gms.google-services")
 }
 
+val apiUrl = findProperty("API_URL") as String
 android {
     namespace = "me.bnnq.messenger"
     compileSdk = 34
@@ -21,6 +25,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "API_URL", "\"$apiUrl\"")
     }
 
     buildTypes {
@@ -74,6 +80,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -100,4 +107,18 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation("com.google.firebase:firebase-messaging")
+
+    // HTTP client
+    implementation("com.android.volley:volley:1.2.1")
 }

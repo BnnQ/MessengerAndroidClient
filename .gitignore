@@ -108,3 +108,6 @@ deploymentTargetDropDown.xml
 render.experimental.xml
 google-services.json
 *.hprof
+ngrok-azurite.yml
+ngrok-backend.yml
+ngrok-launcher.bat

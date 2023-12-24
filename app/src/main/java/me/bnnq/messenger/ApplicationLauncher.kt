@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -50,7 +51,7 @@ fun ApplicationLauncher(activity: MainActivity, context: Context)
             if (chatId != null)
             {
                 val viewModel: ChatViewModel = hiltViewModel()
-                ChatPage(viewModel = viewModel)
+                ChatPage(navController, viewModel)
             }
         }
     }
